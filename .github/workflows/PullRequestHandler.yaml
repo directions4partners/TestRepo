@@ -10,7 +10,7 @@ concurrency:
 
 defaults:
   run:
-    shell: powershell
+    shell: pwsh
 
 permissions:
   actions: read
@@ -35,7 +35,7 @@ jobs:
   Initialization:
     needs: [ PregateCheck ]
     if: (!failure() && !cancelled())
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     outputs:
       projects: ${{ steps.determineProjectsToBuild.outputs.ProjectsJson }}
       projectDependenciesJson: ${{ steps.determineProjectsToBuild.outputs.ProjectDependenciesJson }}
@@ -50,7 +50,7 @@ jobs:
       - name: Dump Workflow Information
         uses: freddydk/AL-Go/Actions/DumpWorkflowInfo@main
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Checkout
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
@@ -62,13 +62,13 @@ jobs:
         id: init
         uses: freddydk/AL-Go/Actions/WorkflowInitialize@main
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Read settings
         id: ReadSettings
         uses: freddydk/AL-Go/Actions/ReadSettings@main
         with:
-          shell: powershell
+          shell: pwsh
           get: shortLivedArtifactsRetentionDays,trackALAlertsInGitHub
 
       - name: Set AL Code Analysis Var output
@@ -87,7 +87,7 @@ jobs:
         id: determineProjectsToBuild
         uses: freddydk/AL-Go/Actions/DetermineProjectsToBuild@main
         with:
-          shell: powershell
+          shell: pwsh
           maxBuildDepth: ${{ env.workflowDepth }}
 
   Build:
@@ -119,7 +119,7 @@ jobs:
   CodeAnalysisUpload:
     needs: [ Initialization, Build ]
     if: (!cancelled()) && (needs.Initialization.outputs.trackALAlertsInGitHub == 'True')
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     name: Code Analysis Processing
     steps:
       - name: Checkout
@@ -140,7 +140,7 @@ jobs:
         if: (success() || failure())
         uses: freddydk/AL-Go/Actions/ProcessALCodeAnalysisLogs@main
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Upload SARIF file to GitHub
         uses: github/codeql-action/upload-sarif@v4
@@ -154,7 +154,7 @@ jobs:
   StatusCheck:
     needs: [ Initialization, Build ]
     if: (!cancelled())
-    runs-on: [ windows-latest ]
+    runs-on: [ ubuntu-latest ]
     name: Pull Request Status Check
     steps:
       - name: Pull Request Status Check
@@ -163,7 +163,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          shell: powershell
+          shell: pwsh
 
       - name: Finalize the workflow
         id: PostProcess
@@ -172,6 +172,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         with:
-          shell: powershell
+          shell: pwsh
           telemetryScopeJson: ${{ needs.Initialization.outputs.telemetryScopeJson }}
           currentJobContext: ${{ toJson(job) }}
