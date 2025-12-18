@@ -2,5 +2,5 @@
   "$schema": "https://raw.githubusercontent.com/freddydk/AL-Go/main/Actions/.Modules/settings.schema.json",
   "type": "PTE",
   "templateUrl": "https://github.com/freddydk/AL-Go@main",
-  "templateSha": "c9e9183149cd4eb8844c7c697cdad64400379f8a"
+  "templateSha": "ffba1f28c11233b428347d6f65d0b281c6deaefe"
 }
