@@ -9,7 +9,7 @@
   "githubRunner": "ubuntu-latest",
   "trustedNuGetFeeds": [
     { "url": "https://nuget.pkg.github.com/directions4partners/index.json" }
-  ]
+  ],
   "templateUrl": "https://github.com/freddydk/AL-Go@main",
   "templateSha": "ffba1f28c11233b428347d6f65d0b281c6deaefe"
 }
